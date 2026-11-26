@@ -2,25 +2,23 @@
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
   "meta": {
     "title": "Terapie Corporală — demo",
-    "description": "Demo of the new site",
-    "author": "demo"
+    "description": "Demonstrație a noului design",
+    "author": "maximus323"
   },
   "landingPage": "/",
   "preferredVersions": {
     "php": "8.2",
     "wp": "latest"
   },
-  "login": true,
   "features": {
     "networking": true
   },
+  "login": true,
   "steps": [
     {
       "step": "setSiteOptions",
       "options": {
-        "blogname": "Terapie Corporală",
-        "permalink_structure": "/%postname%/",
-        "blog_public": 0
+        "permalink_structure": "/%postname%/"
       }
     },
     {
@@ -42,15 +40,14 @@
       "themeData": {
         "resource": "url",
         "url": "https://raw.githubusercontent.com/maximus323/demo-terapie-corporala/main/terapie-corporala.zip"
+      },
+      "options": {
+        "activate": true
       }
     },
     {
       "step": "runPHP",
-      "code": "<?php require '/wordpress/wp-load.php'; switch_theme('terapie-corporala');"
-    },
-    {
-      "step": "runPHP",
-      "code": "<?php require '/wordpress/wp-load.php'; wp_set_current_user(1); if (function_exists('tc_seed_content')) { tc_seed_content(); tc_seed_home_page(); }"
+      "code": "<?php\nrequire_once '/wordpress/wp-load.php';\n// Demo set-up: same front page and sidebar as the client's site, theme v4 active.\nswitch_theme( 'terapie-corporala' );\nupdate_option( 'blogname', 'Fizioterapie Terapia Laser te scapa de durere! Contact 0723.428.414' );\nupdate_option( 'blogdescription', 'Viata fara durere este o placere !' );\nupdate_option( 'blog_public', 0 );\n\n// Remove WordPress's sample content.\nforeach ( array( get_page_by_path( 'sample-page' ), get_page_by_path( 'hello-world', OBJECT, 'post' ) ) as $p ) {\n\tif ( $p ) {\n\t\twp_delete_post( $p->ID, true );\n\t}\n}\n\n$home = get_page_by_path( 'fizioterapie-laser-rece-durere-de-spate-hernie-de-disc-discopatie-lombara-hernie-cervicala-artroza-durere-de-genunchide-soldde-picioare' );\nif ( $home ) {\n\twp_update_post( array( 'ID' => $home->ID, 'post_title' => 'Fizioterapie Laser Rece' ) );\n\tupdate_option( 'show_on_front', 'page' );\n\tupdate_option( 'page_on_front', $home->ID );\n}\n\n$gav = 'https://apa-vie-sanatate.ro/wp-content/uploads/Pret_promotional_filtru_de_apa_vie_GAV-300x222-1-300x222.jpg';\nupdate_option( 'widget_pages', array( 3 => array( 'title' => 'Pagini', 'sortby' => 'post_title', 'exclude' => '' ), '_multiwidget' => 1 ) );\nupdate_option( 'widget_custom_html', array(\n\t4 => array( 'title' => 'Pret filtru de apa vie GAV', 'content' => '<a href=\"https://apa-vie-sanatate.ro/pret-generator-de-apa-vie-gav/\" target=\"_blank\" rel=\"noopener\"><img class=\"aligncenter size-medium\" src=\"' . $gav . '\" alt=\"Filtru de apă vie GAV\" width=\"300\" height=\"222\" /></a>' ),\n\t'_multiwidget' => 1,\n) );\nupdate_option( 'sidebars_widgets', array(\n\t'wp_inactive_widgets' => array(),\n\t'sidebar-1'           => array( 'pages-3', 'custom_html-4' ),\n\t'sidebar-2'           => array(),\n\t'sidebar-3'           => array(),\n\t'array_version'       => 3,\n) );\n"
     }
   ]
 }
